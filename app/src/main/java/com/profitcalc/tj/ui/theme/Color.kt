@@ -1,0 +1,21 @@
+package com.profitcalc.tj.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Brand — deep green (money / growth) with a warm amber accent.
+val GreenPrimary = Color(0xFF1B5E3C)
+val GreenPrimaryDark = Color(0xFF6FDBA6)
+val GreenPrimaryContainer = Color(0xFFB6F0CF)
+val GreenOnPrimaryContainer = Color(0xFF00210F)
+
+val AmberSecondary = Color(0xFFB68A00)
+val AmberSecondaryDark = Color(0xFFFFD54A)
+
+val ProfitPositive = Color(0xFF1B8A4C)
+val ProfitNegative = Color(0xFFC4392B)
+
+val SurfaceLight = Color(0xFFF7FBF6)
+val SurfaceDark = Color(0xFF10130F)
+
+val CardLight = Color(0xFFFFFFFF)
+val CardDark = Color(0xFF1B1F1A)
