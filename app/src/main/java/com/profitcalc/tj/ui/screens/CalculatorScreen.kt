@@ -24,6 +24,7 @@ import com.profitcalc.tj.engine.ValidationField
 import com.profitcalc.tj.engine.ValidationSeverity
 import com.profitcalc.tj.i18n.LocalAppStrings
 import com.profitcalc.tj.ui.components.AdvertisingModeToggle
+import com.profitcalc.tj.ui.components.CalculateButton
 import com.profitcalc.tj.ui.components.HeadlineResultCard
 import com.profitcalc.tj.ui.components.IntField
 import com.profitcalc.tj.ui.components.NumberField
@@ -127,6 +128,10 @@ fun CalculatorScreen(
                         resetSignal = formVersion,
                     )
                 }
+            }
+
+            item {
+                CalculateButton()
             }
 
             if (result != null) {
