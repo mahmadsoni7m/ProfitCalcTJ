@@ -18,12 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * Holds the single [CalculationInput] shared by the Product Calculator,
- * Break-even, Target-profit, and Maximum-discount screens, since they all
- * describe cost parameters for the same product. UI logic (this class) stays
- * separate from math (CalculatorEngine) and storage (the repositories).
- */
 class ProductCalculatorViewModel(
     private val historyRepository: HistoryRepository,
     private val savedProductRepository: SavedProductRepository,
@@ -40,6 +34,9 @@ class ProductCalculatorViewModel(
 
     private val _lastSavedMessage = MutableStateFlow<String?>(null)
     val lastSavedMessage: StateFlow<String?> = _lastSavedMessage.asStateFlow()
+
+    private val _formVersion = MutableStateFlow(0)
+    val formVersion: StateFlow<Int> = _formVersion.asStateFlow()
 
     fun currentValidation(): List<ValidationIssue> = CalculatorEngine.validate(_input.value)
 
@@ -80,6 +77,7 @@ class ProductCalculatorViewModel(
 
     fun loadFromSavedProduct(entity: SavedProductEntity) {
         _input.value = savedProductRepository.toCalculationInput(entity)
+        _formVersion.value += 1
     }
 
     fun saveToHistory() {
@@ -102,5 +100,6 @@ class ProductCalculatorViewModel(
 
     fun reset() {
         _input.value = CalculationInput()
+        _formVersion.value += 1
     }
 }
