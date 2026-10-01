@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.KeyboardType.Companion.Decimal
 import androidx.compose.foundation.text.KeyboardOptions
 import com.profitcalc.tj.util.Formatters
 
@@ -42,7 +41,7 @@ fun NumberField(
         isError = isError,
         supportingText = supportingText?.let { { Text(it, color = MaterialTheme.colorScheme.error) } },
         suffix = suffix?.let { { Text(it) } },
-        keyboardOptions = KeyboardOptions(keyboardType = Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     )
 }
 
