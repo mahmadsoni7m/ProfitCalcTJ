@@ -100,7 +100,7 @@ fun RoasScreen() {
             item { NumberField(strings.roasSpend, spend, viewModel::setSpend) }
             item { NumberField(strings.roasRevenue, revenue, viewModel::setRevenue) }
             if (!result.achievable) {
-                item { Text(strings.maxDiscountNotAchievable, color = MaterialTheme.colorScheme.error) }
+                item { Text(strings.roasNotAchievable, color = MaterialTheme.colorScheme.error) }
             } else {
                 item {
                     HeadlineResultCard(strings.roasResultLabel, Formatters.multiplier(result.roas))
