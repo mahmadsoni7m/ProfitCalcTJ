@@ -22,9 +22,23 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # ubuntu-latest already ships with a preinstalled Android SDK
+      # (ANDROID_HOME / ANDROID_SDK_ROOT are already set on the runner),
+      # so a separate SDK-setup action is not needed — and the popular one
+      # fails today because it tries to install the retired legacy "tools"
+      # package, which Google removed from its repository. We just make
+      # sure the exact platform/build-tools this project needs are present,
+      # using the cmdline-tools already on the runner.
+      - name: Install required Android SDK components
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
+      # This repository does not commit the binary gradle-wrapper.jar (it can't
+      # be produced from source). Instead, we provision Gradle directly and use
+      # it to generate a full, correct wrapper matching gradle/wrapper/gradle-wrapper.properties
+      # before switching to ./gradlew for every step after this one.
       - name: Provision Gradle and generate the wrapper
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -66,3 +80,4 @@ jobs:
           name: ProfitCalc-TJ-APK-release-unsigned
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: ignore
+          
