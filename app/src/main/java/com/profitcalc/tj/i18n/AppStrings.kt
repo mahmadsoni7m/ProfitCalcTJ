@@ -86,6 +86,7 @@ data class AppStrings(
     val maxDiscountMinProfit: String,
     val maxDiscountResultLabel: String,
     val maxDiscountNotAchievable: String,
+    val roasNotAchievable: String,
 
     // ROAS
     val roasTitle: String,
@@ -222,6 +223,7 @@ val TjStrings = AppStrings(
     maxDiscountMinProfit = "Фоидаи ҳадди ақали дилхоҳ",
     maxDiscountResultLabel = "Скидкаи максималӣ",
     maxDiscountNotAchievable = "Бо ин параметрҳо скидка имконнопазир аст",
+    roasNotAchievable = "Барои ҳисоби ROAS хароҷоти реклама бояд аз сифр зиёд бошад",
 
     roasTitle = "ROAS",
     roasSpend = "Хароҷоти реклама",
@@ -350,6 +352,7 @@ val RuStrings = AppStrings(
     maxDiscountMinProfit = "Желаемая минимальная прибыль",
     maxDiscountResultLabel = "Максимальная скидка",
     maxDiscountNotAchievable = "При этих параметрах скидка недостижима",
+    roasNotAchievable = "Для расчёта ROAS расход на рекламу должен быть больше нуля",
 
     roasTitle = "ROAS",
     roasSpend = "Расходы на рекламу",
