@@ -46,6 +46,7 @@ fun CalculatorScreen(
     val strings = LocalAppStrings.current
     val viewModel: ProductCalculatorViewModel = appViewModel()
     val input by viewModel.input.collectAsState()
+    val formVersion by viewModel.formVersion.collectAsState()
     val context = LocalContext.current
 
     val issues = viewModel.currentValidation()
@@ -75,25 +76,29 @@ fun CalculatorScreen(
                         strings.inputPurchasePrice, input.purchasePrice, viewModel::setPurchasePrice,
                         isError = issueFor(ValidationField.PURCHASE_PRICE)?.severity == ValidationSeverity.ERROR,
                         supportingText = issueFor(ValidationField.PURCHASE_PRICE)?.let { strings.validationNegative },
+                        resetSignal = formVersion,
                     )
                     NumberField(
                         strings.inputSalePrice, input.salePrice, viewModel::setSalePrice,
                         isError = issueFor(ValidationField.SALE_PRICE)?.severity == ValidationSeverity.ERROR,
                         supportingText = issueFor(ValidationField.SALE_PRICE)?.let { strings.validationNegative },
+                        resetSignal = formVersion,
                     )
                     IntField(
                         strings.inputQuantity, input.quantity, viewModel::setQuantity,
                         isError = issueFor(ValidationField.QUANTITY)?.severity == ValidationSeverity.ERROR,
                         supportingText = issueFor(ValidationField.QUANTITY)?.let { strings.validationQuantityMin },
+                        resetSignal = formVersion,
                     )
                     NumberField(
                         strings.inputCommission, input.commissionPercent, viewModel::setCommissionPercent,
                         suffix = "%",
                         isError = issueFor(ValidationField.COMMISSION)?.severity == ValidationSeverity.ERROR,
                         supportingText = issueFor(ValidationField.COMMISSION)?.let { strings.validationCommissionRange },
+                        resetSignal = formVersion,
                     )
-                    NumberField(strings.inputLogistics, input.logistics, viewModel::setLogistics)
-                    NumberField(strings.inputPackaging, input.packaging, viewModel::setPackaging)
+                    NumberField(strings.inputLogistics, input.logistics, viewModel::setLogistics, resetSignal = formVersion)
+                    NumberField(strings.inputPackaging, input.packaging, viewModel::setPackaging, resetSignal = formVersion)
 
                     AdvertisingModeToggle(
                         mode = input.advertisingMode,
@@ -101,16 +106,26 @@ fun CalculatorScreen(
                         totalLabel = strings.adModeTotal,
                         perItemLabel = strings.adModePerItem,
                     )
-                    NumberField(strings.inputAdvertising, input.advertisingValue, viewModel::setAdvertisingValue)
+                    NumberField(
+                        strings.inputAdvertising, input.advertisingValue, viewModel::setAdvertisingValue,
+                        resetSignal = formVersion,
+                    )
 
                     NumberField(
                         strings.inputDiscount, input.discountPercent, viewModel::setDiscountPercent,
                         suffix = "%",
                         isError = issueFor(ValidationField.DISCOUNT)?.severity == ValidationSeverity.ERROR,
                         supportingText = issueFor(ValidationField.DISCOUNT)?.let { strings.validationDiscountRange },
+                        resetSignal = formVersion,
                     )
-                    NumberField(strings.inputTax, input.taxPercent, viewModel::setTaxPercent, suffix = "%")
-                    NumberField(strings.inputOtherCosts, input.otherCosts, viewModel::setOtherCosts)
+                    NumberField(
+                        strings.inputTax, input.taxPercent, viewModel::setTaxPercent, suffix = "%",
+                        resetSignal = formVersion,
+                    )
+                    NumberField(
+                        strings.inputOtherCosts, input.otherCosts, viewModel::setOtherCosts,
+                        resetSignal = formVersion,
+                    )
                 }
             }
 
