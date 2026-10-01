@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.profitcalc.tj.i18n.LocalAppStrings
+import com.profitcalc.tj.ui.components.CalculateButton
 import com.profitcalc.tj.ui.components.HeadlineResultCard
 import com.profitcalc.tj.ui.components.NumberField
 import com.profitcalc.tj.util.Formatters
@@ -40,6 +41,7 @@ fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
         ) {
             item { NumberField(strings.discountOriginalPrice, originalPrice, viewModel::setOriginalPrice) }
             item { NumberField(strings.discountPercent, discountPercent, viewModel::setDiscountPercent, suffix = "%") }
+            item { CalculateButton() }
             item {
                 HeadlineResultCard(
                     strings.discountFinalPrice,
@@ -68,6 +70,7 @@ fun MaxDiscountScreen(currencySymbol: String, decimalPlaces: Int) {
             item {
                 NumberField(strings.maxDiscountMinProfit, minProfit, viewModel::setMinDesiredProfitForDiscount)
             }
+            item { CalculateButton() }
             if (!result.achievable) {
                 item { Text(strings.maxDiscountNotAchievable, color = MaterialTheme.colorScheme.error) }
             } else {
@@ -99,6 +102,7 @@ fun RoasScreen() {
         ) {
             item { NumberField(strings.roasSpend, spend, viewModel::setSpend) }
             item { NumberField(strings.roasRevenue, revenue, viewModel::setRevenue) }
+            item { CalculateButton() }
             if (!result.achievable) {
                 item { Text(strings.roasNotAchievable, color = MaterialTheme.colorScheme.error) }
             } else {
