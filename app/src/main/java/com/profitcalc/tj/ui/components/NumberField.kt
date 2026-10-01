@@ -15,11 +15,6 @@ import androidx.compose.ui.text.input.KeyboardType.Companion.Decimal
 import androidx.compose.foundation.text.KeyboardOptions
 import com.profitcalc.tj.util.Formatters
 
-/**
- * A numeric text field that never crashes on empty/partial input: it keeps its
- * own display string independent from the parsed Double, and only emits a
- * change once parsing succeeds (or the field is cleared, which emits 0.0).
- */
 @Composable
 fun NumberField(
     label: String,
@@ -29,8 +24,9 @@ fun NumberField(
     suffix: String? = null,
     isError: Boolean = false,
     supportingText: String? = null,
+    resetSignal: Any = Unit,
 ) {
-    var text by remember(value) {
+    var text by remember(resetSignal) {
         mutableStateOf(if (value == 0.0) "" else Formatters.money(value, 2).replace(",", ""))
     }
 
@@ -50,7 +46,7 @@ fun NumberField(
     )
 }
 
-/** Whole-number field for quantity-style inputs. */
+/** Whole-number field for quantity-style inputs. Same live-typing fix as [NumberField]. */
 @Composable
 fun IntField(
     label: String,
@@ -59,8 +55,9 @@ fun IntField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     supportingText: String? = null,
+    resetSignal: Any = Unit,
 ) {
-    var text by remember(value) { mutableStateOf(if (value == 0) "" else value.toString()) }
+    var text by remember(resetSignal) { mutableStateOf(if (value == 0) "" else value.toString()) }
 
     OutlinedTextField(
         value = text,
