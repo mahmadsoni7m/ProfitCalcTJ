@@ -50,10 +50,10 @@ fun CalculatorScreen(
     val formVersion by viewModel.formVersion.collectAsState()
     val context = LocalContext.current
 
-    val issues = viewModel.currentValidation()
+    val issues = viewModel.validate(input)
     fun issueFor(field: ValidationField) = issues.firstOrNull { it.field == field }
     val hasBlockingErrors = issues.any { it.severity == ValidationSeverity.ERROR }
-    val result = if (!hasBlockingErrors) viewModel.currentResult() else null
+    val result = if (!hasBlockingErrors) viewModel.calculate(input) else null
 
     Scaffold(topBar = { TopAppBar(title = { Text(strings.navCalculator) }) }) { padding ->
         LazyColumn(
@@ -155,12 +155,12 @@ fun CalculatorScreen(
                     }
                 }
                 item {
-                    Button(onClick = { viewModel.saveToHistory() }, modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = { viewModel.saveToHistory(input) }, modifier = Modifier.fillMaxWidth()) {
                         Text(strings.actionSave + " — " + strings.navHistory)
                     }
                 }
                 item {
-                    OutlinedButton(onClick = { viewModel.saveAsProduct() }, modifier = Modifier.fillMaxWidth()) {
+                    OutlinedButton(onClick = { viewModel.saveAsProduct(input) }, modifier = Modifier.fillMaxWidth()) {
                         Text(strings.savedProductsSave + " — " + strings.navSavedProducts)
                     }
                 }
