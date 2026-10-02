@@ -45,7 +45,9 @@ fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
             item {
                 HeadlineResultCard(
                     strings.discountFinalPrice,
-                    Formatters.moneyWithCurrency(viewModel.finalPrice(), currencySymbol, decimalPlaces),
+                    Formatters.moneyWithCurrency(
+                        viewModel.finalPrice(originalPrice, discountPercent), currencySymbol, decimalPlaces,
+                    ),
                 )
             }
         }
@@ -57,9 +59,9 @@ fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
 fun MaxDiscountScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
     val viewModel: ProductCalculatorViewModel = appViewModel()
-    viewModel.input.collectAsState().value
+    val input by viewModel.input.collectAsState()
     val minProfit by viewModel.minDesiredProfitForDiscount.collectAsState()
-    val result = viewModel.currentMaxDiscount()
+    val result = viewModel.maxDiscount(input, minProfit)
 
     Scaffold(topBar = { TopAppBar(title = { Text(strings.maxDiscountTitle) }) }) { padding ->
         LazyColumn(
@@ -92,7 +94,7 @@ fun RoasScreen() {
     val viewModel: RoasViewModel = appViewModel()
     val spend by viewModel.spend.collectAsState()
     val revenue by viewModel.revenue.collectAsState()
-    val result = viewModel.result()
+    val result = viewModel.result(spend, revenue)
 
     Scaffold(topBar = { TopAppBar(title = { Text(strings.roasTitle) }) }) { padding ->
         LazyColumn(
