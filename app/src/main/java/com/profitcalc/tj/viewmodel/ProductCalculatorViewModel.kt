@@ -38,22 +38,22 @@ class ProductCalculatorViewModel(
     private val _formVersion = MutableStateFlow(0)
     val formVersion: StateFlow<Int> = _formVersion.asStateFlow()
 
-    fun currentValidation(): List<ValidationIssue> = CalculatorEngine.validate(_input.value)
+    fun validate(input: CalculationInput): List<ValidationIssue> = CalculatorEngine.validate(input)
 
-    fun currentResult(): CalculationResult = CalculatorEngine.calculate(_input.value)
+    fun calculate(input: CalculationInput): CalculationResult = CalculatorEngine.calculate(input)
 
-    fun currentBreakEven(): BreakEvenResult = CalculatorEngine.breakEven(_input.value)
+    fun breakEven(input: CalculationInput): BreakEvenResult = CalculatorEngine.breakEven(input)
 
-    fun currentTargetProfit(): TargetProfitResult =
-        CalculatorEngine.targetProfit(_input.value, _targetProfitTotal.value)
+    fun targetProfit(input: CalculationInput, totalTargetProfit: Double): TargetProfitResult =
+        CalculatorEngine.targetProfit(input, totalTargetProfit)
 
-    fun currentMaxDiscount(): MaxDiscountResult = CalculatorEngine.maxDiscount(
-        salePrice = _input.value.salePrice,
-        purchasePrice = _input.value.purchasePrice,
-        logistics = _input.value.logistics,
-        packaging = _input.value.packaging,
-        commissionPercent = _input.value.commissionPercent,
-        minDesiredProfit = _minDesiredProfitForDiscount.value,
+    fun maxDiscount(input: CalculationInput, minDesiredProfit: Double): MaxDiscountResult = CalculatorEngine.maxDiscount(
+        salePrice = input.salePrice,
+        purchasePrice = input.purchasePrice,
+        logistics = input.logistics,
+        packaging = input.packaging,
+        commissionPercent = input.commissionPercent,
+        minDesiredProfit = minDesiredProfit,
     )
 
     fun update(transform: (CalculationInput) -> CalculationInput) {
@@ -80,16 +80,16 @@ class ProductCalculatorViewModel(
         _formVersion.value += 1
     }
 
-    fun saveToHistory() {
+    fun saveToHistory(input: CalculationInput) {
         viewModelScope.launch {
-            historyRepository.save(_input.value, currentResult())
+            historyRepository.save(input, calculate(input))
             _lastSavedMessage.value = "history"
         }
     }
 
-    fun saveAsProduct() {
+    fun saveAsProduct(input: CalculationInput) {
         viewModelScope.launch {
-            savedProductRepository.save(_input.value)
+            savedProductRepository.save(input)
             _lastSavedMessage.value = "product"
         }
     }
