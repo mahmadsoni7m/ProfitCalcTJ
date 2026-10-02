@@ -30,8 +30,8 @@ import com.profitcalc.tj.viewmodel.appViewModel
 fun BreakEvenScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
     val viewModel: ProductCalculatorViewModel = appViewModel()
-    viewModel.input.collectAsState().value
-    val breakEven = viewModel.currentBreakEven()
+    val input by viewModel.input.collectAsState()
+    val breakEven = viewModel.breakEven(input)
 
     Scaffold(topBar = { TopAppBar(title = { Text(strings.breakEvenTitle) }) }) { padding ->
         LazyColumn(
@@ -68,9 +68,9 @@ fun BreakEvenScreen(currencySymbol: String, decimalPlaces: Int) {
 fun TargetProfitScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
     val viewModel: ProductCalculatorViewModel = appViewModel()
-    viewModel.input.collectAsState().value
+    val input by viewModel.input.collectAsState()
     val target by viewModel.targetProfitTotal.collectAsState()
-    val result = viewModel.currentTargetProfit()
+    val result = viewModel.targetProfit(input, target)
 
     Scaffold(topBar = { TopAppBar(title = { Text(strings.targetProfitTitle) }) }) { padding ->
         LazyColumn(
