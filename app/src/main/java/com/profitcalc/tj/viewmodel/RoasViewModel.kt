@@ -17,5 +17,5 @@ class RoasViewModel : ViewModel() {
     fun setSpend(v: Double) { _spend.value = v }
     fun setRevenue(v: Double) { _revenue.value = v }
 
-    fun result(): RoasResult = CalculatorEngine.roas(_spend.value, _revenue.value)
+    fun result(spend: Double, revenue: Double): RoasResult = CalculatorEngine.roas(spend, revenue)
 }
