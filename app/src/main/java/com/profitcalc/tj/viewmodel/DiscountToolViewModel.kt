@@ -16,5 +16,6 @@ class DiscountToolViewModel : ViewModel() {
     fun setOriginalPrice(v: Double) { _originalPrice.value = v }
     fun setDiscountPercent(v: Double) { _discountPercent.value = v }
 
-    fun finalPrice(): Double = CalculatorEngine.discountedPrice(_originalPrice.value, _discountPercent.value)
+    fun finalPrice(originalPrice: Double, discountPercent: Double): Double =
+        CalculatorEngine.discountedPrice(originalPrice, discountPercent)
 }
