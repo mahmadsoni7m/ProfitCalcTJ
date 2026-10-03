@@ -24,7 +24,6 @@ import com.profitcalc.tj.engine.ValidationField
 import com.profitcalc.tj.engine.ValidationSeverity
 import com.profitcalc.tj.i18n.LocalAppStrings
 import com.profitcalc.tj.ui.components.AdvertisingModeToggle
-import com.profitcalc.tj.ui.components.CalculateButton
 import com.profitcalc.tj.ui.components.HeadlineResultCard
 import com.profitcalc.tj.ui.components.IntField
 import com.profitcalc.tj.ui.components.NumberField
@@ -61,6 +60,36 @@ fun CalculatorScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            if (result != null) {
+                item {
+                    HeadlineResultCard(
+                        strings.resultProfitPerItem,
+                        Formatters.moneyWithCurrency(result.profitPerItem, currencySymbol, decimalPlaces),
+                        isPositive = result.profitPerItem >= 0,
+                    )
+                }
+                item {
+                    SectionCard(strings.sectionBreakdown) {
+                        StatRow(strings.resultFinalSalePrice, Formatters.money(result.finalSalePrice, decimalPlaces))
+                        StatRow(strings.resultDiscountAmount, Formatters.money(result.discountAmount, decimalPlaces))
+                        StatRow(strings.resultTotalProfit, Formatters.money(result.totalProfit, decimalPlaces))
+                        StatRow(strings.resultRevenue, Formatters.money(result.revenue, decimalPlaces))
+                        StatRow(strings.resultTotalCommission, Formatters.money(result.totalCommission, decimalPlaces))
+                        StatRow(strings.resultTotalCost, Formatters.money(result.totalCost, decimalPlaces))
+                        StatRow(strings.resultMargin, Formatters.percent(result.marginPercent))
+                        StatRow(strings.resultRoi, Formatters.percent(result.roiPercent))
+                    }
+                }
+            } else {
+                item {
+                    Text(
+                        strings.validationRequired,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
+
             item {
                 OutlinedTextField(
                     value = input.productName,
@@ -130,30 +159,7 @@ fun CalculatorScreen(
                 }
             }
 
-            item {
-                CalculateButton()
-            }
-
             if (result != null) {
-                item {
-                    HeadlineResultCard(
-                        strings.resultProfitPerItem,
-                        Formatters.moneyWithCurrency(result.profitPerItem, currencySymbol, decimalPlaces),
-                        isPositive = result.profitPerItem >= 0,
-                    )
-                }
-                item {
-                    SectionCard(strings.sectionBreakdown) {
-                        StatRow(strings.resultFinalSalePrice, Formatters.money(result.finalSalePrice, decimalPlaces))
-                        StatRow(strings.resultDiscountAmount, Formatters.money(result.discountAmount, decimalPlaces))
-                        StatRow(strings.resultTotalProfit, Formatters.money(result.totalProfit, decimalPlaces))
-                        StatRow(strings.resultRevenue, Formatters.money(result.revenue, decimalPlaces))
-                        StatRow(strings.resultTotalCommission, Formatters.money(result.totalCommission, decimalPlaces))
-                        StatRow(strings.resultTotalCost, Formatters.money(result.totalCost, decimalPlaces))
-                        StatRow(strings.resultMargin, Formatters.percent(result.marginPercent))
-                        StatRow(strings.resultRoi, Formatters.percent(result.roiPercent))
-                    }
-                }
                 item {
                     Button(onClick = { viewModel.saveToHistory(input) }, modifier = Modifier.fillMaxWidth()) {
                         Text(strings.actionSave + " — " + strings.navHistory)
@@ -199,14 +205,6 @@ fun CalculatorScreen(
                     ) {
                         Text(strings.shareResult)
                     }
-                }
-            } else {
-                item {
-                    Text(
-                        strings.validationRequired,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
                 }
             }
         }
