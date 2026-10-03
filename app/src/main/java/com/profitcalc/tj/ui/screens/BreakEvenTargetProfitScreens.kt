@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.profitcalc.tj.i18n.LocalAppStrings
-import com.profitcalc.tj.ui.components.CalculateButton
 import com.profitcalc.tj.ui.components.HeadlineResultCard
 import com.profitcalc.tj.ui.components.NumberField
 import com.profitcalc.tj.ui.components.SectionCard
@@ -78,15 +77,7 @@ fun TargetProfitScreen(currencySymbol: String, decimalPlaces: Int) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item {
-                NumberField(strings.targetProfitInput, target, viewModel::setTargetProfitTotal)
-            }
-            item { CalculateButton() }
-            if (!result.achievable) {
-                item {
-                    Text(strings.breakEvenNotAchievable, color = MaterialTheme.colorScheme.error)
-                }
-            } else {
+            if (result.achievable) {
                 item {
                     HeadlineResultCard(
                         strings.targetProfitRequiredPriceLabel,
@@ -101,6 +92,13 @@ fun TargetProfitScreen(currencySymbol: String, decimalPlaces: Int) {
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
+            } else {
+                item {
+                    Text(strings.breakEvenNotAchievable, color = MaterialTheme.colorScheme.error)
+                }
+            }
+            item {
+                NumberField(strings.targetProfitInput, target, viewModel::setTargetProfitTotal)
             }
         }
     }
