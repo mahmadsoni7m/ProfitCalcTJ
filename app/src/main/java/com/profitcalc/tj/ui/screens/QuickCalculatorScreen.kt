@@ -2,11 +2,13 @@ package com.profitcalc.tj.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -27,6 +29,9 @@ import com.profitcalc.tj.i18n.LocalAppStrings
 import com.profitcalc.tj.util.Formatters
 
 private enum class Op { ADD, SUB, MUL, DIV, PERCENT }
+
+private val CalcButtonShape = RoundedCornerShape(12.dp)
+private val CalcButtonHeight = 56.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,13 +99,13 @@ fun QuickCalculatorScreen() {
     Scaffold(topBar = { TopAppBar(title = { Text(strings.quickCalcTitle) }) }) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Card(Modifier.fillMaxWidth()) {
                 Text(
                     display,
-                    modifier = Modifier.fillMaxWidth().padding(24.dp),
-                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.fillMaxWidth().padding(20.dp),
+                    style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.End,
                 )
             }
@@ -114,8 +119,9 @@ fun QuickCalculatorScreen() {
             )
 
             rows.forEach { row ->
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     row.forEach { key ->
+                        val isOperator = key in listOf("÷", "×", "−", "+", "=", "%")
                         Button(
                             onClick = {
                                 when (key) {
@@ -129,10 +135,19 @@ fun QuickCalculatorScreen() {
                                     else -> onDigit(key)
                                 }
                             },
-                            modifier = Modifier.weight(1f).aspectRatio(1.3f),
-                            colors = ButtonDefaults.buttonColors(),
+                            modifier = Modifier.weight(1f).height(CalcButtonHeight),
+                            shape = CalcButtonShape,
+                            colors = if (isOperator) {
+                                ButtonDefaults.buttonColors()
+                            } else {
+                                ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
                         ) {
-                            Text(key, style = MaterialTheme.typography.titleLarge)
+                            Text(key, style = MaterialTheme.typography.titleMedium)
                         }
                     }
                 }
