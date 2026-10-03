@@ -6,15 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -22,12 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.profitcalc.tj.i18n.LocalAppStrings
 import com.profitcalc.tj.util.Formatters
+import kotlinx.coroutines.launch
 
 @Composable
 fun NumberField(
@@ -129,6 +132,9 @@ fun IntField(
     }
 }
 
+private val KeypadButtonShape = RoundedCornerShape(10.dp)
+private val KeypadButtonHeight = 48.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NumericKeypadSheet(
@@ -141,16 +147,23 @@ private fun NumericKeypadSheet(
     val strings = LocalAppStrings.current
     var current by remember { mutableStateOf(initialValue) }
     val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+
+    fun close() {
+        scope.launch { sheetState.hide() }.invokeOnCompletion {
+            if (!sheetState.isVisible) onDismiss()
+        }
+    }
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
         Column(
-            modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(title, style = MaterialTheme.typography.titleMedium)
+            Text(title, style = MaterialTheme.typography.titleSmall)
             Text(
                 current.ifEmpty { "0" },
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End,
             )
@@ -172,12 +185,12 @@ private fun NumericKeypadSheet(
             }
 
             rows.forEach { row ->
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     row.forEach { key ->
                         if (key.isEmpty()) {
-                            Box(modifier = Modifier.weight(1f))
+                            Box(modifier = Modifier.weight(1f).height(KeypadButtonHeight))
                         } else {
-                            OutlinedButton(
+                            Button(
                                 onClick = {
                                     current = when (key) {
                                         "⌫" -> current.dropLast(1)
@@ -186,16 +199,26 @@ private fun NumericKeypadSheet(
                                     }
                                     onValueChange(current)
                                 },
-                                modifier = Modifier.weight(1f).aspectRatio(1.6f),
+                                modifier = Modifier.weight(1f).height(KeypadButtonHeight),
+                                shape = KeypadButtonShape,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                ),
+                                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
                             ) {
-                                Text(key, style = MaterialTheme.typography.titleLarge)
+                                Text(key, style = MaterialTheme.typography.titleMedium)
                             }
                         }
                     }
                 }
             }
 
-            Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = ::close,
+                modifier = Modifier.fillMaxWidth().height(KeypadButtonHeight),
+                shape = KeypadButtonShape,
+            ) {
                 Text(strings.actionConfirm)
             }
         }
