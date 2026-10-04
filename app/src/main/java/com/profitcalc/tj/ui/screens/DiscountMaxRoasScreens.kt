@@ -1,5 +1,6 @@
 package com.profitcalc.tj.ui.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,7 @@ import com.profitcalc.tj.viewmodel.ProductCalculatorViewModel
 import com.profitcalc.tj.viewmodel.RoasViewModel
 import com.profitcalc.tj.viewmodel.appViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
@@ -38,7 +39,7 @@ fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item {
+            stickyHeader {
                 HeadlineResultCard(
                     strings.discountFinalPrice,
                     Formatters.moneyWithCurrency(
@@ -52,7 +53,7 @@ fun DiscountScreen(currencySymbol: String, decimalPlaces: Int) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MaxDiscountScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
@@ -68,7 +69,7 @@ fun MaxDiscountScreen(currencySymbol: String, decimalPlaces: Int) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (result.achievable) {
-                item {
+                stickyHeader {
                     HeadlineResultCard(
                         strings.maxDiscountResultLabel,
                         Formatters.percent(result.maxDiscountPercent),
@@ -84,7 +85,7 @@ fun MaxDiscountScreen(currencySymbol: String, decimalPlaces: Int) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun RoasScreen() {
     val strings = LocalAppStrings.current
@@ -100,7 +101,7 @@ fun RoasScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (result.achievable) {
-                item {
+                stickyHeader {
                     HeadlineResultCard(strings.roasResultLabel, Formatters.multiplier(result.roas))
                 }
                 item {
