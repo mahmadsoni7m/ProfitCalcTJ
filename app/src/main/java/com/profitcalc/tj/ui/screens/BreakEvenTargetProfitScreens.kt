@@ -1,5 +1,6 @@
 package com.profitcalc.tj.ui.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,7 @@ import com.profitcalc.tj.util.Formatters
 import com.profitcalc.tj.viewmodel.ProductCalculatorViewModel
 import com.profitcalc.tj.viewmodel.appViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BreakEvenScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
@@ -43,7 +44,7 @@ fun BreakEvenScreen(currencySymbol: String, decimalPlaces: Int) {
                     Text(strings.breakEvenNotAchievable, color = MaterialTheme.colorScheme.error)
                 }
             } else {
-                item {
+                stickyHeader {
                     HeadlineResultCard(
                         strings.breakEvenMinPrice,
                         Formatters.moneyWithCurrency(breakEven.minSalePrice, currencySymbol, decimalPlaces),
@@ -62,7 +63,7 @@ fun BreakEvenScreen(currencySymbol: String, decimalPlaces: Int) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TargetProfitScreen(currencySymbol: String, decimalPlaces: Int) {
     val strings = LocalAppStrings.current
@@ -78,7 +79,7 @@ fun TargetProfitScreen(currencySymbol: String, decimalPlaces: Int) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (result.achievable) {
-                item {
+                stickyHeader {
                     HeadlineResultCard(
                         strings.targetProfitRequiredPriceLabel,
                         Formatters.moneyWithCurrency(result.requiredSalePrice, currencySymbol, decimalPlaces),
