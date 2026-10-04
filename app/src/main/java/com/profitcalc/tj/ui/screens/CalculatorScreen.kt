@@ -1,5 +1,6 @@
 package com.profitcalc.tj.ui.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +35,7 @@ import com.profitcalc.tj.util.Formatters
 import com.profitcalc.tj.viewmodel.ProductCalculatorViewModel
 import com.profitcalc.tj.viewmodel.appViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CalculatorScreen(
     currencySymbol: String,
@@ -61,7 +62,7 @@ fun CalculatorScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (result != null) {
-                item {
+                stickyHeader {
                     HeadlineResultCard(
                         strings.resultProfitPerItem,
                         Formatters.moneyWithCurrency(result.profitPerItem, currencySymbol, decimalPlaces),
