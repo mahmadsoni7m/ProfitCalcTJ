@@ -2,8 +2,8 @@ package com.profitcalc.tj.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,8 +30,11 @@ import com.profitcalc.tj.util.Formatters
 
 private enum class Op { ADD, SUB, MUL, DIV, PERCENT }
 
-private val CalcButtonShape = RoundedCornerShape(12.dp)
-private val CalcButtonHeight = 56.dp
+private data class CalcKey(val label: String, val weight: Float = 1f)
+
+private val CalcButtonShape = RoundedCornerShape(10.dp)
+private val CalcButtonHeight = 50.dp
+private val OperatorKeys = setOf("÷", "×", "−", "+", "=", "%", "⌫", "C")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +65,11 @@ fun QuickCalculatorScreen() {
             d == "." && display.contains(".") -> display
             else -> display + d
         }
+    }
+
+    fun onBackspace() {
+        justEvaluated = false
+        display = if (display.length <= 1) "0" else display.dropLast(1)
     }
 
     fun onOp(op: Op) {
@@ -96,46 +104,51 @@ fun QuickCalculatorScreen() {
         justEvaluated = false
     }
 
+    fun onKey(key: String) {
+        when (key) {
+            "C" -> onClear()
+            "⌫" -> onBackspace()
+            "÷" -> onOp(Op.DIV)
+            "×" -> onOp(Op.MUL)
+            "−" -> onOp(Op.SUB)
+            "+" -> onOp(Op.ADD)
+            "%" -> onOp(Op.PERCENT)
+            "=" -> onEquals()
+            else -> onDigit(key)
+        }
+    }
+
+    val rows: List<List<CalcKey>> = listOf(
+        listOf(CalcKey("C"), CalcKey("⌫"), CalcKey("%"), CalcKey("÷")),
+        listOf(CalcKey("7"), CalcKey("8"), CalcKey("9"), CalcKey("×")),
+        listOf(CalcKey("4"), CalcKey("5"), CalcKey("6"), CalcKey("−")),
+        listOf(CalcKey("1"), CalcKey("2"), CalcKey("3"), CalcKey("+")),
+        listOf(CalcKey("0", weight = 2f), CalcKey("."), CalcKey("=")),
+    )
+
     Scaffold(topBar = { TopAppBar(title = { Text(strings.quickCalcTitle) }) }) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Card(Modifier.fillMaxWidth()) {
                 Text(
                     display,
-                    modifier = Modifier.fillMaxWidth().padding(20.dp),
-                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 36.dp),
+                    style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.End,
                 )
             }
 
-            val rows = listOf(
-                listOf("7", "8", "9", "÷"),
-                listOf("4", "5", "6", "×"),
-                listOf("1", "2", "3", "−"),
-                listOf("C", "0", ".", "+"),
-                listOf("%", "="),
-            )
+            Spacer(Modifier.height(4.dp))
 
             rows.forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    row.forEach { key ->
-                        val isOperator = key in listOf("÷", "×", "−", "+", "=", "%")
+                    row.forEach { calcKey ->
+                        val isOperator = calcKey.label in OperatorKeys
                         Button(
-                            onClick = {
-                                when (key) {
-                                    "C" -> onClear()
-                                    "÷" -> onOp(Op.DIV)
-                                    "×" -> onOp(Op.MUL)
-                                    "−" -> onOp(Op.SUB)
-                                    "+" -> onOp(Op.ADD)
-                                    "%" -> onOp(Op.PERCENT)
-                                    "=" -> onEquals()
-                                    else -> onDigit(key)
-                                }
-                            },
-                            modifier = Modifier.weight(1f).height(CalcButtonHeight),
+                            onClick = { onKey(calcKey.label) },
+                            modifier = Modifier.weight(calcKey.weight).height(CalcButtonHeight),
                             shape = CalcButtonShape,
                             colors = if (isOperator) {
                                 ButtonDefaults.buttonColors()
@@ -147,7 +160,7 @@ fun QuickCalculatorScreen() {
                             },
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
                         ) {
-                            Text(key, style = MaterialTheme.typography.titleMedium)
+                            Text(calcKey.label, style = MaterialTheme.typography.titleMedium)
                         }
                     }
                 }
